@@ -4,8 +4,14 @@
 
 # Home page
 GET     /                                       Application.index
-GET     /notes                                  Notes.list
 POST    /notes                                  Notes.create
+GET     /notes                                  Notes.list
+#PUT     /notes                                  Notes.?
+#DELETE  /notes                                  Notes.deleteAll
+#POST    /notes                                  Notes.create
+GET     /notes/{id}                             Notes.read
+PUT     /notes/{id}                             Notes.update
+DELETE  /notes/{id}                             Notes.delete
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

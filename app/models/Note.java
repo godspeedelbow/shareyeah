@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import play.db.jpa.Model;
 
@@ -11,6 +13,8 @@ import play.db.jpa.Model;
 public class Note extends Model {
 
 	public String IP;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date postedAt;
 
 	@Lob
