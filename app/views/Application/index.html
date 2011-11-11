@@ -1,0 +1,9 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+${IP}
+<ul>
+#{list items:notes, as:'note'}
+<li>${note.IP} - ${note.content}</li>
+#{/list}
+</ul>
