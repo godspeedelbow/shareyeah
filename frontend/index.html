@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shareyeah.com</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="libraries/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="shareyeah.css" rel="stylesheet">
+    <script language="javascript" src="libraries/underscore/underscore.js" type="text/javascript"></script>
+    <script language="javascript" src="libraries/jquery/jquery-1.6.4.min.js" type="text/javascript"></script>
+    <script language="javascript" src="libraries/backbone/backbone.js" type="text/javascript"></script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="bootstrap/images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="bootstrap/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  </head>
+  <body>
+		<script type="text/template" id="note_template">
+			<div class="note">
+		    <input name="id" type="hidden" value="<%= id %>">
+		    <div class="content row">
+		      <%= content %> 
+		    </div>
+		    <div class="date row">
+		    	<%= postedAt %>
+				<a href="javascript:void(0)" id="delete" class="delete">Delete</a>
+		    </div>
+			</div>
+		</script>
+
+		<script type="text/template" id="new_note_template">
+			<textarea rows="5" name="new_note_content" id="new_note_content" placeholder="Type anything here to share it with your wifi neighbors…"></textarea>        
+    	<a class="btn primary large" id="new_note_submit" name="new_note_submit">Share it, yeah!</a>
+		</script>
+
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="#">Shareyeah.com</a>
+          <ul class="nav">
+            <li><a href="#about">About</a></li>
+          </ul>
+          <p class="pull-right"><a href="#">username</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="content">
+        <!-- Main hero unit for a primary marketing message or call to action -->
+        <div id="new_note" class="hero-unit">
+        </div>
+				<div id="notes"></div>
+	      <footer>
+	        <p>&copy; Shareyeah.com</p>
+	      </footer>
+	      
+      </div>
+    </div>
+    
+    <script language="javascript" src="shareyeah.js" type="text/javascript"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+.container-fluid {
+    min-width: 300px;
+}    
+
+.container-fluid > .content {
+	margin-left:0px;
+}
+
+.hero-unit {
+  padding: 60px 15px;
+}
+
+#new_note_content {
+	min-width: 280px;
+	margin: 0 0px;
+	min-width: 96%;
+	padding: 10px;
+	font-size: 20px;
+}
+
+#new_note_submit {
+	margin-top: 10px;
+	float: right;
+	margin-right: 11px;
+}
+
+.note {
+  padding: 20px 40px;
+  background-color: #F5F5F5;
+  border-radius: 6px 6px 6px 6px;
+  margin-bottom: 30px;
+}
+
+.note .date {
+	font-size: 20px;
+	padding-top: 20px;
+	color: #777;
+}
+
+.note .content {
+	font-size: 25px;
+	line-height: 30px;
+}
+
