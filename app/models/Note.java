@@ -8,11 +8,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import org.apache.commons.lang.StringEscapeUtils;
 
-import play.db.jpa.Model;
 import play.mvc.Http;
+
+import com.google.gson.JsonObject;
 
 @Entity
 public class Note extends AbstractModel {
@@ -34,9 +34,11 @@ public class Note extends AbstractModel {
 		this.content = content;
 		this.postedAt = new Date();
 	}
-
+	
 	@Override
 	public void _save() {
+		this.content = StringEscapeUtils.escapeHtml(this.content);
+		
 		if (this.ipAddress == null) {
 			this.ipAddress = IPv4.findByString(Http.Request.current().remoteAddress).first();
 			if (this.ipAddress == null) {
