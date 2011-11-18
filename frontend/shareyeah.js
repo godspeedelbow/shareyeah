@@ -1,46 +1,6 @@
-/* to do:
- - NewNoteView maakt een model aan en doet een model.save(). Daarna een nieuwe note toevoegen resulteert in een already in database error. Dit kan/moet voorkomen worden door de 'create' view te hiden en een 'display' view er aan te koppelen en in de lijst weer te geven.
- - Dergelijke functionaliteit geeft ook de mogelijkheid om notes inline te editen
-*/
-
-/** NEW NOTE view **/
-
-
-var NewNoteView = Backbone.View.extend({
-	model: Note,
-	el: $('#new_note'),
-	initialize: function() {
-		this.render();
-	},
-	render: function() {
-		var variables = { };
-		var template = _.template( $("#new_note_template").html(), variables );
-		this.el.html( template );
-	},
-	events: {
-		"click a#new_note_submit": "saveNote",
-		"keyup #new_note_content": "noteChanged" 
-	},
-	noteChanged: function ( event ) {
-	  if (event.keyCode == 13 && event.shiftKey)
-	  {
-			this.saveNote();
-	  }
-	},
-	saveNote: function( event ) {
-		this.model.set({'content': $('#new_note_content').val()});
-		this.model.save();
-		//notes.add(this.model);
-		$('#new_note_content').val('').blur();
-	}
-});
-
 /** NOTE model **/
 
 var Note = Backbone.Model.extend({
-	defaults: {
-    content:	'empty'
-  },
   url: function () {
   	if (this.isNew()) {
   		return server + 'notes';
@@ -49,49 +9,86 @@ var Note = Backbone.Model.extend({
   	}
   },
   initialize: function(){
-		this.sanitizeContent();
 		
 		return this;
-	},
-	sanitizeContent: function () {
-		var text = this.get('content');
-    var exp = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    text = text.replace(exp,"<a href='$1'>$1</a>"); 
-	  text = text.replace(/\n/g,'<br />');
-
-	  this.set({'content' : text});
 	}
 });
 
+
 var NoteView = Backbone.View.extend({
 	model: Note,
-	events: {
-    "click a.delete": "doDelete"
-  },
+	tagName: 	'div',
+	className:'note',
 	initialize: function() {
 		this.render();
-		this.model.bind('destroy', this.modelDestroyed, this);
+		this.model.bind('destroy', this.removeView, this);
 		
 		return this;
 	},
 	render: function() {
 		var variables = { 
-			content: this.model.get('content'), 
-			id: this.model.get('id'), 
+			viewContent: this.getViewContent(this.model.get('content')),
+			editContent: this.getEditContent(this.model.get('content')),
+			id: this.model.get('id'),
 			postedAt: this.model.get('postedAt')
 		};
 		$(this.el).html( _.template( $("#note_template").html(), variables ) );
 		
 		return this;
 	},
-	doDelete: function( event ) {
+	events: {
+    'click a#delete'							: 'deleteNote',
+    'click a#edit' 								: 'editNote',
+		'click a.note_submit'					:	'saveNote',
+		'keyup textarea.note_content'	: 'noteChanged' 
+  },
+	noteChanged: function ( event ) {
+	  if (event.keyCode == 13 && event.shiftKey)
+	  {
+			this.saveNote();
+	  }
+	},
+	editNote: function( event ) {
+		console.dir (event);
+		$(this.el).find('.view_note').hide();
+		$(this.el).find('.edit_note').show();
+	},
+	saveNote: function( event ) {
+		this.model.set({'content': $(this.el).find('.note_content').val()},{silent: true});
+		this.model.save();
+		$(this.el).find('.edit_note').hide();
+		$(this.el).find('.view_note').show();
+		this.render();
+		
+		//this.trigger('save',this);
+		
+		this.remove();
+		this.unbind();
+	},
+	deleteNote: function( event ) {
 		this.model.destroy();
 	},
-	modelDestroyed: function ( model ) {
+	removeView: function ( model ) {
 		//delete note
 		this.remove();
 		this.unbind();
+	},
+	getViewContent: function (text) {
+		if (text == undefined)
+			return;
+			
+    var exp = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    text = text.replace(exp,"<a href='$1'>$1</a>"); 
+
+	  return text;
+	},
+	getEditContent: function (text) {
+		if (text == undefined)
+			return '';
+
+	  return text.unescapeHtml();
 	}
+
 });
 
 
@@ -119,7 +116,7 @@ var NotesView = Backbone.View.extend({
 	initialize: function() {
 		this._viewPointers = new Array();
 		
-		this.collection.bind('add', this.addOne, this);
+		this.collection.bind('add', this.addModel, this);
 		this.collection.bind('destroy', this.removeOne, this);
 		
 		this.render();
@@ -138,9 +135,20 @@ var NotesView = Backbone.View.extend({
 		
 		return this;
 	},
-	addOne: function( newNote ) {
+	addModel: function( newNote ) {
 		var newNoteView = new NoteView ({ model: newNote });
 		this._viewPointers[newNote.id] = newNoteView;
+		var newPostEl = newNoteView.render().el;
+		$(newPostEl).hide();
+		this.el.prepend(newPostEl);
+		$(newPostEl).slideDown('slow');
+
+		return this;
+	},
+	addView: function( newNoteView ) {
+		collection.add(newNoteView.model, {silent:true});
+		this._viewPointers[newNoteView.model.id] = newNoteView;
+		
 		var newPostEl = newNoteView.render().el;
 		$(newPostEl).hide();
 		this.el.prepend(newPostEl);
@@ -160,17 +168,42 @@ var server = 'http://localhost/shareyeah/';
 
 var AppView = Backbone.View.extend({
 	initialize: function() {
-		var newNoteView = new NewNoteView({model: new Note()});
-		var notes = new Notes ();
-		newNoteView.bind('all', this.showEvent, this);
-		notes.bind('all', this.showEvent, this);
+		this.newNote = new Note();
+		this.newNoteView = new NoteView({model: this.newNote});
+		$(this.newNoteView.el).appendTo ($('#new_note'));
+		this.notes = new Notes ();
+		
+		this.newNote.bind('change', this.addNote, this);
+		//this.newNoteView.bind('save', this.addNoteView, this);
 	},
-	showEvent: function (event, iets, context) {
-		console.log ('event: ' + event);
-		//console.dir (iets);
-		//console.dir (nogiets);
+	addNote: function (note) {
+		console.log ('adding note');
+		this.notes.add(note);
+		
+		//create a new note with a view
+		this.newNote = new Note();
+		this.newNoteView = new NoteView({model: this.newNote});
+		$(this.newNoteView.el).appendTo ($('#new_note'));
+		this.newNote.bind('change', this.addNote, this);
+	},
+	addNoteView: function (noteView) {
+		console.log ('adding note');
+		this.notes.add(note);
+		
+		//create a new note with a view
+		this.newNote = new Note();
+		this.newNoteView = new NoteView({model: this.newNote});
+		$(this.newNoteView.el).appendTo ($('#new_note'));
+		this.newNote.bind('change', this.addNote, this);
 	}
 });
 
-new AppView();
+var appView = new AppView();
 
+String.prototype.unescapeHtml = function () {
+    var temp = document.createElement("div");
+    temp.innerHTML = this;
+    var result = temp.childNodes[0].nodeValue;
+    temp.removeChild(temp.firstChild);
+    return result;
+} 
