@@ -46,6 +46,7 @@ public class Notes extends AbstractController {
 		// check if note exists and 
 		if (noteToUpdate != null) {
 			noteToUpdate.content = note.content;
+			noteToUpdate.save();
 			renderJSON(noteToUpdate);
 		} else {
 			renderJSON("");

@@ -46,7 +46,7 @@ public class Note extends AbstractModel {
 				this.ipAddress.save();
 			}
 		} else {
-			IPv4 ipAddress = IPv4.find("byIpAddress", this.ipAddress).first();
+			IPv4 ipAddress = IPv4.find("byId", this.ipAddress.id).first();
 			if (ipAddress == null) {
 				this.ipAddress.save();
 			}
