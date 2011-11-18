@@ -8,7 +8,7 @@ POST    /notes                                  Notes.create
 GET     /notes                                  Notes.list
 #PUT     /notes                                  Notes.?
 #DELETE  /notes                                  Notes.deleteAll
-#POST    /notes                                  Notes.create
+#POST    /notes                                  Notes.createMany
 GET     /notes/{id}                             Notes.read
 PUT     /notes/{id}                             Notes.update
 DELETE  /notes/{id}                             Notes.delete
@@ -18,6 +18,3 @@ GET     /favicon.ico                            404
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
-
-# Catch all
-*       /{controller}/{action}                  {controller}.{action}
