@@ -1,0 +1,6 @@
+[submodule "shareyeah-api"]
+	path = shareyeah-api
+	url = gitolite@shareyeah.com:shareyeah/shareyeah-api
+[submodule "shareyeah-frontend"]
+	path = shareyeah-frontend
+	url = gitolite@shareyeah.com:shareyeah/shareyeah-frontend
