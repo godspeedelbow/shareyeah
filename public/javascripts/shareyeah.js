@@ -168,6 +168,7 @@ var server = 'http://localhost/shareyeah/';
 
 var AppView = Backbone.View.extend({
 	initialize: function() {
+		console.log ('here');
 		this.newNote = new Note();
 		this.newNoteView = new NoteView({model: this.newNote});
 		$(this.newNoteView.el).appendTo ($('#new_note'));
@@ -198,8 +199,6 @@ var AppView = Backbone.View.extend({
 	}
 });
 
-var appView = new AppView();
-
 String.prototype.unescapeHtml = function () {
     var temp = document.createElement("div");
     temp.innerHTML = this;
@@ -207,3 +206,18 @@ String.prototype.unescapeHtml = function () {
     temp.removeChild(temp.firstChild);
     return result;
 } 
+
+/*
+$(document).ready(function() {
+	var appView = new AppView();
+	
+  $('div.content').embedly({
+    maxWidth: 450,
+    wmode: 'transparent',
+    method: 'after',
+    key:'ed39be7e143611e1bae54040d3dc5c07'
+  });
+
+	$('textarea').elastic();
+});
+*/
