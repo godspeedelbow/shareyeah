@@ -8,7 +8,11 @@ var notes = require('./routes/notes');
 
 var app = express();
 
+//routes
 app.get('/notes', notes.get);
+
+//server public files
+app.use('/public', express.static(__dirname + '/public'));
 
 app.listen(config.port);
 
