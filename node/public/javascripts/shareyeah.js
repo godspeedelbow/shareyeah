@@ -30,7 +30,7 @@ var NoteView = Backbone.View.extend({
 			viewContent: this.getViewContent(this.model.get('content')),
 			editContent: this.getEditContent(this.model.get('content')),
 			id: this.model.get('id'),
-			postedAt: this.model.get('postedAt')
+			created: this.model.get('created')
 		};
 		$(this.el).html( _.template( $("#note_template").html(), variables ) );
 		
@@ -164,7 +164,7 @@ var NotesView = Backbone.View.extend({
 });
 
 
-var server = 'http://localhost/shareyeah/'; 
+var server = 'http://localhost:4000/'; 
 
 var AppView = Backbone.View.extend({
 	initialize: function() {
