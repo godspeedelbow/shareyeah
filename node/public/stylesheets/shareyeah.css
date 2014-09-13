@@ -45,7 +45,7 @@ a.cheesy_tagline:hover {
 }
 
 .note .edit_note {
-	display: block;
+	display: none;
 }
 
 #new_note .note .view_note {
